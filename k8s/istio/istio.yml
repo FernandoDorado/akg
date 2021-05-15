@@ -82,8 +82,8 @@ spec:
             targetPort: 15443
         resources:
           requests:
-            cpu: 5m
-            memory: 5Mi
+            cpu: 50m
+            memory: 50Mi
     - name: knative-localgateway
       enabled: true
       label:
