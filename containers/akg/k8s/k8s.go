@@ -37,7 +37,7 @@ func (k *K8s) Connect() {
 }
 
 func (k *K8s) AkgPods() []string {
-    pods, err := k.client.CoreV1().Pods("default").List(context.TODO(), metav1.ListOptions{})
+    pods, err := k.client.CoreV1().Pods("app").List(context.TODO(), metav1.ListOptions{})
     if err != nil {
         panic(err.Error())
     }
