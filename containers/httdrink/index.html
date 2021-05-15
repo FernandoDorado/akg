@@ -1,0 +1,393 @@
+<head>
+    <title>httdrink</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/graydux.js"></script>
+    <style>
+    body { /* background */
+        background: #1c1c1c;
+    }
+
+    h1 { /* title */
+        color: white;
+        font-size: 4em;
+        padding-top: 0.1em;
+        padding-left: 0.1em;
+        padding-right: 0.1em;
+        text-align: center;
+    }
+
+    h2 { /* question */
+        color: white;
+        font-size: 4em;
+        font-family: systems-ui;
+        text-align: center;
+    }
+
+    h3 { /* victory text */
+        color: white;
+        font-size: 3em;
+        opacity: 0;
+        display: none;
+        transition: 0.5s;
+        text-align: center;
+
+        /* rainbow gradient */
+        background: linear-gradient(to right, orange , yellow, green, cyan, blue, violet);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    ul { /* answers */
+        list-style: none;
+        text-align: center;
+        padding: 0em;
+        padding-bottom: 3em;
+        margin: auto;
+    }
+
+    li { /* answer */
+        padding: 0.5em;
+    }
+
+    button { /* answer button */
+        background-color: #408fbf; /* Blue */
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 1em;
+        width: 50%;
+    }
+
+    button:focus { /* answer button */
+      outline: none;
+    }
+
+    button:hover { /* anwer button */
+        box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    }
+
+    th { /* score */
+      background-color: #408fbf; /* Blue */
+      font-size: .8em;
+    }
+
+    table, tr, th, td { /* scores */
+      border-collapse: collapse;
+      border: 2px solid #408fbf; /* Blue */
+      margin: auto;
+      padding: .5em;
+      font-family: system-ui;
+    }
+
+    tr { /* score */
+      font-size: 1.3em;
+      background-color: lightblue;
+      color: black;
+    }
+    </style>
+</head>
+<body>
+    <h1 id="title"></h1>
+    <table className="table">
+	  <tbody>
+		<tr>
+		  <th id="team-a-header">Team A</th>
+		  <th id="team-b-header">Team B</th>
+		</tr>
+		<tr>
+		  <td id="team-a-score"></td>
+		  <td id="team-b-score"></td>
+		</tr>
+	  </tbody>
+	</table>
+    <div id="scores"></div>
+    <h3 id="victory">victory</h3>
+    <h2 id="question"></h2>
+    <ul id="answers"></ul>
+    <script>
+    const graydux = new Graydux();
+
+    const TITLE = "title";
+    const ANSWERS = "answers";
+    const QUESTION = "question";
+    const STATUS_CODES = "statusCodes";
+    const SCORE = "score";
+    const TEAM_A = "teamA";
+    const TEAM_B = "teamB";
+    const IS_TEAM_A_TURN = "isTeamATurn";
+    const SHUFFLE = "shuffle";
+
+    // initialize state
+    graydux.setState([], {
+        title: "",
+        isTeamATurn: true,
+        score: {
+            teamA: 0,
+            teamB: 0
+        },
+        question: {
+            code: 0,
+            value: "",
+            index: 0
+        },
+        answers: [],
+        statusCodes: [
+            { code: 100, value: "Continue" },
+            { code: 101, value: "Switching Protocols" },
+            { code: 200, value: "OK" },
+            { code: 201, value: "Created" },
+            { code: 202, value: "Accepted" },
+            { code: 203, value: "Non-Authoritative Information" },
+            { code: 204, value: "No Content" },
+            { code: 205, value: "Reset Content" },
+            { code: 206, value: "Partial Content" },
+            { code: 300, value: "Multiple Choices" },
+            { code: 301, value: "Moved Permanently" },
+            { code: 302, value: "Found" },
+            { code: 303, value: "See Other" },
+            { code: 304, value: "Not Modified" },
+            { code: 305, value: "Use Proxy" },
+            { code: 307, value: "Temporary Redirect" },
+            { code: 400, value: "Bad Request" },
+            { code: 401, value: "Unauthorized" },
+            { code: 402, value: "Payment Required" },
+            { code: 403, value: "Forbidden" },
+            { code: 404, value: "Not Found" },
+            { code: 405, value: "Method Not Allowed" },
+            { code: 406, value: "Not Acceptable" },
+            { code: 407, value: "Proxy Authentication Required" },
+            { code: 408, value: "Request Timeout" },
+            { code: 409, value: "Conflict" },
+            { code: 410, value: "Gone" },
+            { code: 411, value: "Length Required" },
+            { code: 412, value: "Precondition Failed" },
+            { code: 413, value: "Request Entity Too Large" },
+            { code: 414, value: "Request-URI Too Long" },
+            { code: 415, value: "Unsupported Media Type" },
+            { code: 416, value: "Requested Range Not Satisfiable" },
+            { code: 417, value: "Expectation Failed" },
+            { code: 500, value: "Internal Server Error" },
+            { code: 501, value: "Not Implemented" },
+            { code: 502, value: "Bad Gateway" },
+            { code: 503, value: "Service Unavailable" },
+            { code: 504, value: "Gateway Timeout" },
+            { code: 505, value: "HTTP Version Not Supported" }
+        ]
+    });
+
+    // HELPER FUNCTIONS
+
+    const victoryUI = (team) => {
+        // reveal victory text for 3 seconds
+        let victoryTag = document.getElementById("victory");
+
+        if (team == TEAM_A) {
+            victoryTag.innerHTML = "Team A Victory";
+        } else if (team == TEAM_B) {
+            victoryTag.innerHTML = "Team B Victory";
+        }
+
+        victoryTag.style.opacity = 1;
+        victoryTag.style.display = "block";
+
+        window.setTimeout(() => {
+            // we don't need to change the inner HTML because it will get updated. Just hide it.
+            victoryTag.style.opacity = 0;
+            victoryTag.style.display = "none";
+        }, 3000); // 3 seconds
+    }
+
+
+    const shuffle = (a) => {
+        // shuffle array
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    const getRandomInt = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+
+    // REDUCERS
+
+    graydux.addReducer(TITLE, [TITLE], (state, action, data) => {
+        // update title
+        switch (action) {
+            case TITLE:
+                return data;
+            default:
+                return state;
+        }
+    });
+
+    graydux.addReducer(ANSWERS, [ANSWERS], (state, action, data) => {
+        switch (action) {
+            case ANSWERS:
+                return data.slice(0, 4);
+            default:
+                return state;
+        }
+    });
+
+    graydux.addReducer(QUESTION, [QUESTION], (state, action, data) => {
+        switch (action) {
+            case QUESTION:
+                const question = data[getRandomInt(0, 3)];
+                return {
+                    code: question.code,
+                    value: question.value,
+                }
+            default:
+                return state;
+        }
+    });
+
+    graydux.addReducer(SHUFFLE, [STATUS_CODES], (state, action, data) => {
+        switch (action) {
+            case SHUFFLE:
+                return shuffle(state);
+            default:
+                return state;
+        }
+    });
+
+    graydux.addReducer(TEAM_A, [SCORE, TEAM_A], (state, action, data) => {
+        switch (action) {
+            case TEAM_A:
+                return (state == 2) ? 0 : state + 1;
+            default:
+                return state;
+        }
+    });
+
+    graydux.addReducer(TEAM_B, [SCORE, TEAM_B], (state, action, data) => {
+        switch (action) {
+            case TEAM_B:
+                return (state == 2) ? 0 : state + 1;
+            default:
+                return state;
+        }
+    });
+
+    graydux.addReducer(IS_TEAM_A_TURN, [IS_TEAM_A_TURN], (state, action, data) => {
+        switch (action) {
+            case IS_TEAM_A_TURN:
+                return !state;
+            default:
+                return state;
+        }
+    });
+
+    // NEXT ROUND LOGIC
+
+    const nextRound = (event) => {
+        // disable all buttons
+        let answers = document.getElementById("answers").childNodes;
+        for (let i in answers) {
+            if (answers[i].childNodes && answers[i].childNodes.length > 0) {
+                answers[i].childNodes[0].disabled = "true";
+            }
+        }
+        // Handle browser APIs
+        let answerTag;
+        if (event.path) {
+            answerTag = event.path[0]; // chrome
+        } else {
+            answerTag = event.srcElement; // safari
+        }
+
+        const realAnswer = graydux.getState([QUESTION, "value"]);
+        const userAnswer = answerTag.innerText;
+        const isTeamATurn = graydux.getState([IS_TEAM_A_TURN]);
+
+        if (realAnswer == userAnswer) {
+            // Show that it was the correct answer
+            answerTag.style = "background-color: #4CAF50;"
+
+            if (isTeamATurn && graydux.getState([SCORE, TEAM_A]) == 2) {
+                    victoryUI(TEAM_A);
+            } else if (!isTeamATurn && graydux.getState([SCORE, TEAM_B]) == 2) {
+                    victoryUI(TEAM_B);
+            }
+        } else {
+            // Show that it was the incorrect answer
+            answerTag.style = "background-color: #a53a37;";
+        }
+
+        // this order is important, since the question is pulled from the answers
+        window.setTimeout(() => {
+            if (realAnswer == userAnswer) {
+                if (isTeamATurn) {
+                    // give team A a point
+                    graydux.dispatch(TEAM_A, {});
+                } else {
+                    // give team B a point
+                    graydux.dispatch(TEAM_B, {});
+                }
+            }
+            graydux.dispatch(IS_TEAM_A_TURN, {});
+            graydux.dispatch(SHUFFLE, {});
+            graydux.dispatch(ANSWERS, graydux.getState([STATUS_CODES]));
+            graydux.dispatch(QUESTION, graydux.getState([ANSWERS]));
+        }, 1500);
+    }
+
+    // SUBSCRIPTIONS
+
+    graydux.subscribe(TITLE, (state) => {
+        document.getElementById(TITLE).innerHTML = state;
+    });
+
+    graydux.subscribe(TEAM_A, (state) => {
+        document.getElementById("team-a-score").innerHTML = state;
+    });
+
+    graydux.subscribe(TEAM_B, (state) => {
+        document.getElementById("team-b-score").innerHTML = state;
+    });
+
+    graydux.subscribe(QUESTION, (state) => {
+        document.getElementById(QUESTION).innerHTML = state.code;
+    });
+
+    graydux.subscribe(ANSWERS, (state) => {
+        // update content
+        let answers = "";
+        for (let i in state) {
+            let value = state[i].value;
+            answers += "<li><button class='answer-field'>" + value + "</button></li>";
+        }
+        document.getElementById(ANSWERS).innerHTML = answers;
+
+        // set onclick attribute for each answer
+        answers = document.getElementsByClassName("answer-field");
+        for (let i in answers) {
+            answers[i].onclick = nextRound;
+        }
+    });
+
+    graydux.subscribe(IS_TEAM_A_TURN, (state) => {
+        if (state) {
+            document.getElementById("team-a-header").style.color = "yellow";
+            document.getElementById("team-b-header").style.color = "black";
+        } else {
+            document.getElementById("team-a-header").style.color = "black";
+            document.getElementById("team-b-header").style.color = "yellow";
+        }
+    });
+
+    // initial render
+    graydux.dispatch(TITLE, "HTTDrink");
+    graydux.dispatch(SHUFFLE, {});
+    graydux.dispatch(ANSWERS, graydux.getState([STATUS_CODES]));
+    graydux.dispatch(QUESTION, graydux.getState([ANSWERS]));
+    </script>
+</body>
