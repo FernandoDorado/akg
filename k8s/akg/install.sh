@@ -1,5 +1,4 @@
 #!/bin/bash
-kubectl apply -f gateway.yml
 kubectl apply -f vs.yml
 kubectl apply -f role.yml
 kubectl apply -f rolebinding.yml
