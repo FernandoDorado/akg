@@ -7,7 +7,7 @@ spec:
   values:
     global:
       proxy:
-        autoInject: disabled
+        autoInject: enabled
       useMCP: false
   meshConfig:
     accessLogFile: /dev/stdout
