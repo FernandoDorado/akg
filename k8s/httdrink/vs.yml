@@ -17,4 +17,4 @@ spec:
       headers:
         request:
           set:
-            Host: httdrink.default.svc.cluster.local
+            Host: httdrink.app.svc.cluster.local
