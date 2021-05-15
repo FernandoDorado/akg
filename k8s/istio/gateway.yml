@@ -1,0 +1,30 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: istio-ingressgateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: istio-ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http2
+      protocol: HTTP
+    hosts:
+    - "akg.xyz"
+    - "*.akg.xyz"
+    tls:
+      httpsRedirect: true
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "akg.xyz"
+    - "*.akg.xyz"
+    tls:
+      mode: SIMPLE
+      credentialName: letsencrypt-cert
+      minProtocolVersion: TLS_AUTO
+---
