@@ -1,9 +1,8 @@
-kind: Role
+kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: akg
-  namespace: app
 rules:
 - apiGroups: [""] # core API group
-  resources: ["pods"]
+  resources: ["pods", "deployments"]
   verbs: ["get", "watch", "list"]
