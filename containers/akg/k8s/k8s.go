@@ -3,7 +3,7 @@ package k8s
 import (
     "context"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	  metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
     "k8s.io/client-go/kubernetes"
     "k8s.io/client-go/rest"
 )
@@ -36,20 +36,17 @@ func (k *K8s) Connect() {
     k.client = clientset
 }
 
-func (k *K8s) AkgPods() []string {
-    pods, err := k.client.CoreV1().Pods("app").List(context.TODO(), metav1.ListOptions{})
+func (k *K8s) Deployments() []string {
+    pods, err := k.client.ExtensionsV1beta1().Deployments("").List(context.TODO(), metav1.ListOptions{})
     if err != nil {
         panic(err.Error())
     }
 
-    var AkgPods []string
+    var Deployments []string
 
-    for _, pod := range pods.Items {
-        name := pod.ObjectMeta.Name
-        if name[0:4] == "akg-" {
-            AkgPods = append(AkgPods, name)
-        }
+    for _, deployment := range pods.Items {
+        Deployments = append(Deployments, deployment.ObjectMeta.Name)
     }
 
-    return AkgPods
+    return Deployments
 }

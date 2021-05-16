@@ -16,8 +16,8 @@ func main() {
     }
     k.Configure()
     k.Connect()
-    akgPods := k.AkgPods()
-    log.Printf("Akg Pods: %s", akgPods)
+    deployments := k.Deployments()
+    log.Printf("Deployments: %s", deployments)
 
     // gin
     ws := &webserver.WebServer{}
