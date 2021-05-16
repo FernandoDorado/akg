@@ -14,6 +14,8 @@ spec:
         selector:
           istio: knative-localgateway
   config:
+    autoscaler:
+      scale-to-zero-grace-period: "300s"
     istio:
       gateway.knative-serving.knative-ingress-gateway: "knative-ingressgateway.istio-system.svc.cluster.local"
       local-gateway.knative-serving.knative-local-gateway: "knative-localgateway.istio-system.svc.cluster.local"
