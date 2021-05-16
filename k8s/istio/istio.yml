@@ -3,7 +3,7 @@ kind: IstioOperator
 spec:
   profile: default
   hub: istio
-  tag: 1.9.4
+  tag: 1.9.4-distroless
   values:
     global:
       proxy:
