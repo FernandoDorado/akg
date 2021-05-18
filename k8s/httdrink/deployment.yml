@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httdrink
+  namespace: app
+  labels:
+    app: httdrink
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httdrink
+  template:
+    metadata:
+      labels:
+        app: httdrink
+    spec:
+      containers:
+      - name: httdrink
+        image: bazhova/httdrink:0.0.0
+        ports:
+        - containerPort: 80
+
