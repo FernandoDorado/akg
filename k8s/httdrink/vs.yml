@@ -11,10 +11,6 @@ spec:
   http:
   - route:
     - destination:
-        host: knative-localgateway.istio-system.svc.cluster.local
+        host: httdrink.app.svc.cluster.local
         port:
-          number: 8081
-      headers:
-        request:
-          set:
-            Host: httdrink.app.svc.cluster.local
+          number: 80
