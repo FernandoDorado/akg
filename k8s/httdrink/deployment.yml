@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: httdrink
-        image: bazhova/httdrink:0.0.0
+        image: bazhova/httdrink:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
