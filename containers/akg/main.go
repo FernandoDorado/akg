@@ -16,8 +16,12 @@ func main() {
 	}
 	k.Configure()
 	k.Connect()
-	apps := k.Apps()
-	log.Printf("Apps: %s", apps)
+	apps, err := k.Apps()
+	if err != nil {
+		log.Printf("failed to get apps: %s", err)
+	} else {
+		log.Printf("apps: %s", apps)
+	}
 
 	// gin
 	ws := &webserver.WebServer{}

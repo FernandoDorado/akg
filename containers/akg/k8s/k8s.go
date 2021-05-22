@@ -2,6 +2,9 @@ package k8s
 
 import (
 	"context"
+	"fmt"
+	"log"
+	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -12,6 +15,15 @@ type K8s struct {
 	config    *rest.Config
 	client    *kubernetes.Clientset
 	InCluster bool
+}
+
+type Instance struct {
+	Name string
+}
+
+type App struct {
+	Name      string
+	Instances []Instance
 }
 
 func (k *K8s) Configure() {
@@ -36,18 +48,38 @@ func (k *K8s) Connect() {
 	k.client = clientset
 }
 
-func (k *K8s) Apps() []string {
+func (k *K8s) Apps() ([]App, error) {
+	apps := []App{}
+
 	deployments, err := k.client.AppsV1().Deployments("app").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		panic(err.Error())
+		log.Print(err)
+		return []App{}, err
 	}
-
-	var AppNames []string
 
 	for _, deployment := range deployments.Items {
 		name := deployment.Name
-		AppNames = append(AppNames, name)
+		app := App{
+			Name: name,
+		}
+
+		pods, err := k.client.CoreV1().Pods("app").List(context.TODO(), metav1.ListOptions{})
+		if err != nil {
+			log.Print(err)
+			return []App{}, err
+		}
+
+		for _, pod := range pods.Items {
+			if strings.Contains(pod.Name, fmt.Sprintf("%s-", name)) {
+				instance := Instance{
+					Name: pod.Name,
+				}
+				app.Instances = append(app.Instances, instance)
+			}
+		}
+
+		apps = append(apps, app)
 	}
 
-	return AppNames
+	return apps, nil
 }
