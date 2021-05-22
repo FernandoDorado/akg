@@ -1,24 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httdrink
+  name: akg
   namespace: app
   labels:
-    app: httdrink
+    app: akg
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: httdrink
+      app: akg
   template:
     metadata:
       labels:
-        app: httdrink
+        app: akg
     spec:
+      serviceAccountName: akg
       containers:
-      - name: httdrink
-        image: bazhova/httdrink:0.0.0
+      - name: akg
+        image: bazhova/akg:0.0.0
         imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 8080
 

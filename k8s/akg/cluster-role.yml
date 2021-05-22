@@ -4,5 +4,8 @@ metadata:
   name: akg
 rules:
 - apiGroups: [""] # core API group
-  resources: ["pods", "deployments"]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["apps"] # apps API group
+  resources: ["deployments"]
   verbs: ["get", "watch", "list"]

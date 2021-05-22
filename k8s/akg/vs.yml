@@ -6,16 +6,11 @@ metadata:
 spec:
   hosts:
   - akg.xyz
-  - www.akg.xyz
   gateways:
   - istio-system/istio-ingressgateway
   http:
   - route:
     - destination:
-        host: knative-localgateway.istio-system.svc.cluster.local
+        host: akg.app.svc.cluster.local
         port:
-          number: 8081
-      headers:
-        request:
-          set:
-            Host: akg.app.svc.cluster.local
+          number: 80

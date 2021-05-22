@@ -3,4 +3,3 @@ kind: ServiceAccount
 metadata:
   name: akg
   namespace: app
-automountServiceAccountToken: true
