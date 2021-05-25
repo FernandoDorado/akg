@@ -9,6 +9,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
 type K8s struct {
@@ -35,7 +36,11 @@ func (k *K8s) Configure() {
 
 		k.config = config
 	} else {
-		panic("not in cluster!")
+		config, err := clientcmd.BuildConfigFromFlags("", "/auth/.kube/config")
+		if err != nil {
+			panic(err.Error())
+		}
+		k.config = config
 	}
 }
 
