@@ -53,7 +53,7 @@ func (k *K8s) Apps() ([]App, error) {
 
 	deployments, err := k.client.AppsV1().Deployments("app").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		log.Print(err)
+		log.Printf("failed to list deployments: %s", err)
 		return []App{}, err
 	}
 
@@ -65,7 +65,7 @@ func (k *K8s) Apps() ([]App, error) {
 
 		pods, err := k.client.CoreV1().Pods("app").List(context.TODO(), metav1.ListOptions{})
 		if err != nil {
-			log.Print(err)
+			log.Printf("failed to list pods: %s", err)
 			return []App{}, err
 		}
 
