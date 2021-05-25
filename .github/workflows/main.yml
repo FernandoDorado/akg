@@ -1,0 +1,17 @@
+# https://github.com/aevea/action-kaniko
+name: Kaniko build
+on: push
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Kaniko build
+        uses: aevea/action-kaniko@master
+        with:
+          image: bazhova/akg
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          path: ./containers/akg
+          cache: true
+          cache_registry: bazhova/akg
