@@ -6,6 +6,6 @@ rules:
 - apiGroups: [""] # core API group
   resources: ["pods"]
   verbs: ["get", "watch", "list"]
-- apiGroups: ["apps"] # apps API group
+- apiGroups: ["extensions", "apps"] # apps API group
   resources: ["deployments"]
   verbs: ["get", "watch", "list"]

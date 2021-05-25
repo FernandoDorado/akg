@@ -29,6 +29,9 @@ type App struct {
 }
 
 func (k *K8s) Configure() {
+	// TODO
+	// need to use some digital ocean config here :/
+	// https://stackoverflow.com/questions/65042279/python-kubernetes-client-requests-fail-with-unable-to-get-local-issuer-certific
 	if k.InCluster {
 		config, err := rest.InClusterConfig()
 		if err != nil {

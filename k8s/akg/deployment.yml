@@ -18,7 +18,7 @@ spec:
       serviceAccountName: akg
       containers:
       - name: akg
-        image: bazhova/akg:main
+        image: bazhova/akg:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
