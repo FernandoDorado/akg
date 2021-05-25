@@ -15,3 +15,4 @@ jobs:
           path: ./containers/akg
           cache: true
           cache_registry: bazhova/akg
+          tag_with_latest: true

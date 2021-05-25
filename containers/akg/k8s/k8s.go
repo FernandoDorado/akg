@@ -10,6 +10,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/util/homedir"
 )
 
 type K8s struct {
@@ -36,7 +37,8 @@ func (k *K8s) Configure() {
 
 		k.config = config
 	} else {
-		config, err := clientcmd.BuildConfigFromFlags("", "/auth/.kube/config")
+		homedir := homedir.HomeDir()
+		config, err := clientcmd.BuildConfigFromFlags("", fmt.Sprintf("%s/%s", homedir, ".kube/config"))
 		if err != nil {
 			panic(err.Error())
 		}
