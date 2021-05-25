@@ -14,12 +14,18 @@ func main() {
 	}
 	k.Configure()
 	k.Connect()
-	apps, err := k.Apps()
+	instances, err := k.Instances()
 	if err != nil {
 		log.Printf("failed to get apps: %s", err)
 	} else {
-		log.Printf("found apps: %s", apps)
+		log.Printf("found instances: %s", instances)
 	}
+	//apps, err := k.Apps()
+	//if err != nil {
+	//	log.Printf("failed to get apps: %s", err)
+	//} else {
+	//	log.Printf("found apps: %s", apps)
+	//}
 
 	// gin
 	ws := &webserver.WebServer{}

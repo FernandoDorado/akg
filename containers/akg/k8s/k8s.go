@@ -58,14 +58,33 @@ func (k *K8s) Connect() {
 	k.client = clientset
 }
 
-func (k *K8s) Apps() ([]App, error) {
-	apps := []App{}
+func (k *K8s) Instances() ([]Instance, error) {
+	pods, err := k.client.CoreV1().Pods("app").List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		log.Printf("failed to list pods: %s", err)
+		return []Instance{}, err
+	}
 
+	instances := []Instance{}
+
+	for _, pod := range pods.Items {
+		instance := Instance{
+			Name: pod.Name,
+		}
+		instances = append(instances, instance)
+	}
+
+	return instances, nil
+}
+
+func (k *K8s) Apps() ([]App, error) {
 	deployments, err := k.client.AppsV1().Deployments("app").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		log.Printf("failed to list deployments: %s", err)
 		return []App{}, err
 	}
+
+	apps := []App{}
 
 	for _, deployment := range deployments.Items {
 		name := deployment.Name
