@@ -25,6 +25,7 @@ type k8s struct {
 	Client        *kubernetes.Clientset
 	InCluster     bool
 	CloudProvider string
+	Ready         bool
 }
 
 type replica struct {
@@ -51,15 +52,21 @@ func main() {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 	})
 	e.GET("/api/v1/apps", func(c *gin.Context) {
-		apps, err := k.apps()
-		if err != nil {
+		if !k.Ready {
 			c.JSON(500, gin.H{
-				"error": err.Error(),
+				"error": "kubernetes client is not ready",
 			})
 		} else {
-			c.JSON(200, gin.H{
-				"apps": apps,
-			})
+			apps, err := k.apps()
+			if err != nil {
+				c.JSON(500, gin.H{
+					"error": err.Error(),
+				})
+			} else {
+				c.JSON(200, gin.H{
+					"apps": apps,
+				})
+			}
 		}
 	})
 	e.GET("/health/live", func(c *gin.Context) {})
@@ -169,6 +176,7 @@ func (k *k8s) connect() (bool, error) {
 	}
 
 	k.Client = clientset
+	k.Ready = true
 
 	return true, nil
 }
