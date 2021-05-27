@@ -26,13 +26,13 @@ type K8s struct {
 	CloudProvider string
 }
 
-type Instance struct {
+type Replica struct {
 	Name string
 }
 
 type App struct {
-	Name      string
-	Instances []Instance
+	Name     string
+	Replicas []Replica
 }
 
 func (k *K8s) Configure() {
@@ -111,20 +111,20 @@ func (k *K8s) Connect() {
 	k.Client = clientset
 }
 
-func (k *K8s) Instances() ([]Instance, error) {
+func (k *K8s) Replicas() ([]Replica, error) {
 	pods, err := k.Client.CoreV1().Pods("app").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		log.Printf("failed to list pods: %s", err)
-		return []Instance{}, err
+		return []Replica{}, err
 	}
 
-	instances := []Instance{}
+	instances := []Replica{}
 
 	for _, pod := range pods.Items {
-		instance := Instance{
+		replica := Replica{
 			Name: pod.Name,
 		}
-		instances = append(instances, instance)
+		instances = append(instances, replica)
 	}
 
 	return instances, nil
@@ -153,10 +153,10 @@ func (k *K8s) Apps() ([]App, error) {
 
 		for _, pod := range pods.Items {
 			if strings.Contains(pod.Name, fmt.Sprintf("%s-", name)) {
-				instance := Instance{
+				replica := Replica{
 					Name: pod.Name,
 				}
-				app.Instances = append(app.Instances, instance)
+				app.Replicas = append(app.Replicas, replica)
 			}
 		}
 
