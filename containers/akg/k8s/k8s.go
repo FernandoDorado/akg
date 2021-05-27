@@ -36,19 +36,6 @@ type App struct {
 }
 
 func (k *K8s) Configure() {
-	// TODO
-
-	// $ k exec -it -n app deploy/akg -- sh
-	// wget -qO- https://10.245.0.1:443/api/v1/namespaces/app/pods
-	// ssl_client: 10.245.0.1: certificate verification failed: unable to get local issuer certificate
-
-	// need to use some digital ocean config here :/
-	// https://stackoverflow.com/questions/65042279/python-kubernetes-client-requests-fail-with-unable-to-get-local-issuer-certific
-
-	// https://pkg.go.dev/k8s.io/client-go@v0.21.0/rest#Config
-	// https://pkg.go.dev/k8s.io/client-go@v0.21.0/rest#TLSClientConfig
-	// https://golang.org/pkg/net/http/
-
 	// configure in/out cluster basic credentials
 	if k.InCluster {
 		config, err := rest.InClusterConfig()
@@ -104,17 +91,14 @@ func (k *K8s) ConfigureForDigitalOcean() {
 	var data map[string]string
 	json.Unmarshal([]byte(body), &data)
 
+	// get cert
 	cert, err := base64.StdEncoding.DecodeString(data["certificate_authority_data"])
-
-	log.Printf("digitalocean response: %s", data)
 	if err != nil {
 		log.Printf("failed to decode cert: %s", err)
 		panic(err)
 	}
 
 	// config
-	//k.Config.Host = data["host"]
-	//k.Config.BearerToken = data["token"]
 	k.Config.TLSClientConfig.CAData = []byte(cert)
 }
 

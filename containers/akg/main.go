@@ -15,18 +15,13 @@ func main() {
 	k.CloudProvider = os.Getenv("CLOUD_PROVIDER")
 	k.Configure()
 	k.Connect()
-	instances, err := k.Instances()
+
+	apps, err := k.Apps()
 	if err != nil {
 		log.Printf("failed to get apps: %s", err)
 	} else {
-		log.Printf("found instances: %s", instances)
+		log.Printf("found apps: %s", apps)
 	}
-	//apps, err := k.Apps()
-	//if err != nil {
-	//	log.Printf("failed to get apps: %s", err)
-	//} else {
-	//	log.Printf("found apps: %s", apps)
-	//}
 
 	// gin
 	ws := &webserver.WebServer{}
