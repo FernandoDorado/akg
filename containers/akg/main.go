@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -121,7 +122,9 @@ func (k *k8s) configureForDigitalOcean() (bool, error) {
 	}
 
 	// call digital ocean api
-	httpClient := &http.Client{}
+	httpClient := &http.Client{
+		Timeout: time.Duration(30000),
+	}
 	req, _ := http.NewRequest("GET", fmt.Sprintf("https://api.digitalocean.com/v2/kubernetes/clusters/%s/credentials", clusterId), nil)
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
