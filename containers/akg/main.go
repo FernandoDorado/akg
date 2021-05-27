@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"akg/k8s"
 	"akg/webserver"
@@ -9,9 +10,9 @@ import (
 
 func main() {
 	// k8s
-	k := &k8s.K8s{
-		InCluster: true,
-	}
+	k := &k8s.K8s{}
+	k.InCluster = (os.Getenv("IN_CLUSTER") == "true")
+	k.CloudProvider = os.Getenv("CLOUD_PROVIDER")
 	k.Configure()
 	k.Connect()
 	instances, err := k.Instances()
