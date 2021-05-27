@@ -55,7 +55,6 @@ func (k *K8s) Configure() {
 		if err != nil {
 			panic(err.Error())
 		}
-
 		k.Config = config
 	} else {
 		homedir := homedir.HomeDir()
