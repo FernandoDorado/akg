@@ -10,6 +10,8 @@ spec:
         autoInject: enabled
       useMCP: false
   meshConfig:
+    defaultConfig:
+      holdApplicationUntilProxyStarts: true
     accessLogFile: /dev/stdout
     enableTracing: true
   components:
