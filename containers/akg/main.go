@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -52,23 +51,56 @@ func main() {
 	e.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 	})
-	e.GET("/api/v1/apps", func(c *gin.Context) {
+
+	e.GET("/api/v1/k8s/reconfigure", func(c *gin.Context) {
+		ok, err := k.configure()
+		if !ok {
+			msg := fmt.Sprintf("failed to reconfigure kubernetes client: %s", err)
+			log.Print(msg)
+			c.JSON(500, gin.H{
+				"error": msg,
+			})
+			return
+		}
+		msg := "reconfigured kubernetes client"
+		log.Print(msg)
+		c.JSON(200, gin.H{})
+	})
+
+	e.GET("/api/v1/k8s/reconnect", func(c *gin.Context) {
+		ok, err := k.connect()
+		if !ok {
+			msg := fmt.Sprintf("failed to reconnect kubernetes client: %s", err)
+			log.Print(msg)
+			c.JSON(500, gin.H{
+				"error": msg,
+			})
+			return
+		}
+		msg := "reconnected kubernetes client"
+		log.Print(msg)
+		c.JSON(200, gin.H{})
+	})
+
+	e.GET("/api/v1/k8s/apps", func(c *gin.Context) {
 		if !k.Ready {
 			c.JSON(500, gin.H{
 				"error": "kubernetes client is not ready",
 			})
-		} else {
-			apps, err := k.apps()
-			if err != nil {
-				c.JSON(500, gin.H{
-					"error": err.Error(),
-				})
-			} else {
-				c.JSON(200, gin.H{
-					"apps": apps,
-				})
-			}
+			return
 		}
+
+		apps, err := k.apps()
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"apps": apps,
+		})
 	})
 	e.GET("/health/live", func(c *gin.Context) {})
 	e.Run()
@@ -122,9 +154,7 @@ func (k *k8s) configureForDigitalOcean() (bool, error) {
 	}
 
 	// call digital ocean api
-	httpClient := &http.Client{
-		Timeout: time.Duration(30000),
-	}
+	httpClient := &http.Client{}
 	req, _ := http.NewRequest("GET", fmt.Sprintf("https://api.digitalocean.com/v2/kubernetes/clusters/%s/credentials", clusterId), nil)
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
