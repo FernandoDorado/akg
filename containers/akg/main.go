@@ -121,7 +121,7 @@ func (k *k8s) configure() (bool, error) {
 		config, err := clientcmd.BuildConfigFromFlags("", fmt.Sprintf("%s/%s", homedir, ".kube/config"))
 		if err != nil {
 			msg := fmt.Sprintf("failed to create out-of-cluster config: %s", err)
-			log.Printf(msg)
+			log.Print(msg)
 			return false, errors.New(msg)
 		}
 		k.Config = config
