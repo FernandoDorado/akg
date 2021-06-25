@@ -1,9 +1,63 @@
 <html>
     <head>
-
+        <script src="https://kit.fontawesome.com/48e0a92c42.js" crossorigin="anonymous"></script>
     </head>
     <body>
-        <h1>Adam K Gray</h1>
-        <p>DevOps | Solutions Architecture | Data Science</p>
+        <div id="header-container">
+            <h1>Adam K Gray</h1>
+            <p>DevOps | Solutions Architecture | Data Science</p>
+        </div>
+
+        <div id="apps-container">
+            <h3>Apps</h3>
+            <i id="apps-reload" class="fas fa-sync-alt"></i>
+            <ul id="apps">
+            </ul>
+        </div>
+
+        <!-- minimum viable javascript code XD -->
+        <script>
+            window.state = {}
+            const displayApps = () => {
+                let innerHTML = ""
+                for (const i in window.state.apps) {
+                    let subdomain = ""
+                    if (window.state.apps[i].name != "akg") {
+                        subdomain = `${window.state.apps[i].name}.`
+                    }
+                    let name = `<a href="https://${subdomain}akg.xyz">${window.state.apps[i].name}</a>`
+
+                    let replicas = ""
+                    for (const replica of window.state.apps[i].replicas) {
+                        replicas += `<li>${replica.name}</li>`
+                    }
+                    replicas = `<h5>healthy replicas</h5><ul>${replicas}</ul>`
+
+                    let partialHTML = `<li>${name}${replicas}</li>`
+
+                    innerHTML += partialHTML
+                }
+
+                document.getElementById("apps").innerHTML = innerHTML
+            }
+
+            const getApps = () => {
+                fetch("/api/v1/k8s/apps")
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json()
+                        }
+                        return {}
+                    })
+                    .then((body) => {
+                        window.state = body
+                        displayApps()
+                    })
+            }
+
+            document.getElementById("apps-reload").onclick = getApps
+
+            getApps()
+        </script>
     </body>
 </html>
