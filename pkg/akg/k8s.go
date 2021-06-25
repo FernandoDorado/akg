@@ -80,14 +80,12 @@ func (k *k8s) configureForDigitalOcean() (bool, error) {
 		return false, errors.New(msg)
 	}
 
-	cert, err := dok8cert.Get(clusterId, accessToken)
+	_, err := dok8cert.Update(clusterId, accessToken, k.Config)
 	if err != nil {
 		msg := fmt.Sprintf("failed to get custom TLS certificate from digitalocean: %s", err)
 		log.Print(msg)
 		return false, errors.New(msg)
 	}
-
-	dok8cert.Set(cert, k.Config)
 
 	return true, nil
 }
