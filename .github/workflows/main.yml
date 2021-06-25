@@ -2,7 +2,7 @@
 name: Kaniko build
 on: push
 jobs:
-  docker:
+  akg:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -12,7 +12,21 @@ jobs:
           image: bazhova/akg
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          path: ./containers/akg
+          path: ./pkg/akg
           cache: true
           cache_registry: bazhova/akg
+          tag_with_latest: true
+  httdrink:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Kaniko build
+        uses: aevea/action-kaniko@master
+        with:
+          image: bazhova/httdrink
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          path: ./pkg/httdrink
+          cache: true
+          cache_registry: bazhova/httdrink
           tag_with_latest: true
