@@ -1,9 +1,92 @@
 <html>
     <head>
+        <!-- mobile friendly -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- google fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap" rel="stylesheet"> 
+
+        <!-- font awesome icons -->
         <script src="https://kit.fontawesome.com/48e0a92c42.js" crossorigin="anonymous"></script>
+
+        <!-- document styling -->
+        <style>
+            #header {
+                font-family: 'Source Code Pro', monospace;
+                text-align: center;
+            }
+
+            #links {
+                display: inline-block;
+                font-family: 'Source Code Pro', monospace;
+                margin: auto;
+                text-align: center;
+                width: 100%;
+            }
+
+            table, td, th {
+                font-family: 'Source Code Pro', monospace;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 1em;
+                margin-bottom: 1em;
+            }
+
+            table, td {
+                border: 1px solid black;
+            }
+
+            th {
+                border: none;
+            }
+
+
+        </style>
     </head>
     <body>
-        <h1>Adam K Gray</h1>
-        <p>Solutions Architecture &amp;&amp; Data Science</p>
+        <div id="header">
+            <h1>Adam K Gray</h1>
+            <p>Solutions Architecture &amp;&amp; Data Science</p>
+        </div>
+
+        <div id="links">
+            <a href="#coming-soon">resume</a>
+            <a href="https://github.com/adamkgray">github</a>
+            <a href="#coming-soon">blog</a>
+        </div>
+
+        <div id="about-site">
+            <table>
+                <tr>
+                    <th>About this site</th>
+                </tr>
+                <tr>
+                    <td>Cloud</td>
+                    <td>Digital Ocean</td>
+                </tr>
+                <tr>
+                    <td>Container Orchestration</td>
+                    <td>Kubernetes</td>
+                </tr>
+                <tr>
+                    <td>Language</td>
+                    <td>Go</td>
+                </tr>
+                <tr>
+                    <td>Mesh</td>
+                    <td>Istio</td>
+                </tr>
+                <tr>
+                    <td>TLS</td>
+                    <td>Let's Encrypt</td>
+                </tr>
+                <tr>
+                    <td>Web Framework</td>
+                    <td>Gin</td>
+                </tr>
+            </table>
+        </div>
     </body>
 </html>
