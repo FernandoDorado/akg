@@ -2,14 +2,16 @@
     <title>httdrink</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="/graydux.js"></script>
-    <style>
-    body { /* background */
-        background: #1c1c1c;
-    }
 
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap" rel="stylesheet"> 
+
+    <style>
     h1 { /* title */
-        color: white;
         font-size: 4em;
+        font-family: 'Source Code Pro', monospace;
         padding-top: 0.1em;
         padding-left: 0.1em;
         padding-right: 0.1em;
@@ -17,27 +19,26 @@
     }
 
     h2 { /* question */
-        color: white;
         font-size: 4em;
-        font-family: systems-ui;
+        font-family: 'Source Code Pro', monospace;
         text-align: center;
     }
 
     h3 { /* victory text */
         color: white;
         font-size: 3em;
+        font-family: 'Source Code Pro', monospace;
         opacity: 0;
         display: none;
         transition: 0.5s;
         text-align: center;
 
         /* rainbow gradient */
-        background: linear-gradient(to right, orange , yellow, green, cyan, blue, violet);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        background: blue;
     }
 
     ul { /* answers */
+        font-family: 'Source Code Pro', monospace;
         list-style: none;
         text-align: center;
         padding: 0em;
@@ -46,14 +47,14 @@
     }
 
     li { /* answer */
+        font-family: 'Source Code Pro', monospace;
         padding: 0.5em;
     }
 
     button { /* answer button */
-        background-color: #408fbf; /* Blue */
         border: none;
-        color: white;
         cursor: pointer;
+        font-family: 'Source Code Pro', monospace;
         padding: 15px 32px;
         text-align: center;
         text-decoration: none;
@@ -63,30 +64,26 @@
     }
 
     button:focus { /* answer button */
-      outline: none;
+        outline: none;
     }
 
-    button:hover { /* anwer button */
+    button:hover { /* answer button */
         box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
     }
 
     th { /* score */
-      background-color: #408fbf; /* Blue */
-      font-size: .8em;
+        font-size: .8em;
     }
 
     table, tr, th, td { /* scores */
-      border-collapse: collapse;
-      border: 2px solid #408fbf; /* Blue */
+      border: 2px solid black;
       margin: auto;
-      padding: .5em;
-      font-family: system-ui;
+      font-family: 'Source Code Pro', monospace;
     }
 
     tr { /* score */
       font-size: 1.3em;
-      background-color: lightblue;
-      color: black;
+      font-family: 'Source Code Pro', monospace;
     }
     </style>
 </head>
@@ -310,7 +307,7 @@
 
         if (realAnswer == userAnswer) {
             // Show that it was the correct answer
-            answerTag.style = "background-color: #4CAF50;"
+            answerTag.style = "background-color: green;"
 
             if (isTeamATurn && graydux.getState([SCORE, TEAM_A]) == 2) {
                     victoryUI(TEAM_A);
@@ -319,7 +316,7 @@
             }
         } else {
             // Show that it was the incorrect answer
-            answerTag.style = "background-color: #a53a37;";
+            answerTag.style = "background-color: red;";
         }
 
         // this order is important, since the question is pulled from the answers
@@ -376,11 +373,11 @@
 
     graydux.subscribe(IS_TEAM_A_TURN, (state) => {
         if (state) {
-            document.getElementById("team-a-header").style.color = "yellow";
+            document.getElementById("team-a-header").style.color = "blue";
             document.getElementById("team-b-header").style.color = "black";
         } else {
             document.getElementById("team-a-header").style.color = "black";
-            document.getElementById("team-b-header").style.color = "yellow";
+            document.getElementById("team-b-header").style.color = "blue";
         }
     });
 
