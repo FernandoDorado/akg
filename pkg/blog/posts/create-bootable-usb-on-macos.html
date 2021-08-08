@@ -1,0 +1,81 @@
+<head>
+    <title>blog</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap" rel="stylesheet"> 
+    <style>
+        h1, p {
+            font-family: 'Source Code Pro', monospace;
+        }
+    </style>
+</head>
+<body>
+    <a href="/index.html">back</a>
+    <!-- post goes here -->
+    <h1>Create Bootable USB on MacOS</h1>
+
+    <p>
+        Insert your USB stick into the mac, open Terminal, and run:
+    </p>
+    <pre><code>
+        $ diskutil list
+    </code></pre>
+
+    <p>
+        You'll see a list of all disks on your machine.
+        Your USB stick will proabably be the last one.
+        Its name will be something like <code>/dev/diskN</code> where "N" is an integer.
+        You can identify it quickly by the number of gigbytes reported available
+    </p>
+
+    <p>
+        First, erase the disk . Warning! This will delete all the things! Anyways, to do it, run:
+    </p>
+    <pre><code>
+        $ export DISK_NAME="<YOURCAPITALIZEDNAME>"
+        $ eraseDisk FAT32 $DISK_NAME /dev/diskN
+    </code></pre>
+
+    <p>
+        "DISK_NAME" can be anything as long as it is all capital letters.
+        This will erase the contents of your disk and reformat it to MS-DOS FAT 32, which is the format you want.
+    </p>
+
+    <p>
+        Umount the USB disk, run:
+    </p>
+    <pre><code>
+        $ diskutil unmountDisk /dev/diskN
+    </code></pre>
+
+    <p>
+        The disk must be unmounted in order to write to it.
+        Otherwise, when you try to write to it you will get a <code>resource busy</code> error.
+    </p>
+
+    <p>
+        Write your <code>.iso</code> to the USB, run:
+    </p>
+    <pre><code>
+        $ sudo dd bs=1M if=/path/to/your/linux.iso of=/dev/rdiskN
+    </code></pre>
+
+    <p>
+        Things to note:
+        (1) bs=1M defines the transfer rate.
+        (Sometimes you will get an error saying illegal numeric value. Just change it to 1m as opposed to 1M. It has to be capital or lowercase depending on whether you're using mac or linux and it's hard to keep it straight)
+        (2) <code>if</code> and <code>of</code> stand for input-file and output-file respectively
+        (3) the <code>r</code> in <code>rdiskN</code> stands for raw and makes the process go faster, but you don't need it, and it could just as well be <code>/dev/diskN</code>.
+        The computer will produce no visual output as it writes the data.
+        You just have to wait.
+        You can press ctrl-t though if you want an update.
+        When it's done writing to the USB, your prompt will return and a window will pop up saying that the USB is unreadable by your computer. This is okay. You can choose to eject it from this pop up, or choose ignore and eject it from the command line by running
+    </p>
+    <pre><code>
+        $ diskutil eject /dev/diskN
+    </code></pre>
+    <!-- end of post -->
+    <a href="/index.html">back</a>
+</body>
