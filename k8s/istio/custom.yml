@@ -23,8 +23,17 @@ spec:
     hosts:
     - "akg.xyz"
     - "*.akg.xyz"
+    # mount from volume or directory of RaspPi host
     tls:
       mode: SIMPLE
       credentialName: letsencrypt-cert
       minProtocolVersion: TLS_AUTO
 ---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: app
+  namespace: app
+spec:
+  mtls:
+    mode: STRICT

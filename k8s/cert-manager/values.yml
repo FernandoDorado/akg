@@ -1,3 +1,0 @@
-extraArgs:
-- '--dns01-recursive-nameservers-only'
-- '--dns01-recursive-nameservers="10.245.0.10:53"'

@@ -22,3 +22,23 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: akg
+  namespace: app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: akg
+  namespace: app
+spec:
+  selector:
+    app: akg
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---

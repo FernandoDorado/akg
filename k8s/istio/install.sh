@@ -2,6 +2,5 @@
 echo "[ISTIO]"
 istioctl upgrade -f istio.yml -y
 
-echo "[POST INSTALL]"
-kubectl apply -f gateway.yml
-kubectl apply -f mtls.yml
+echo "[CUSTOM]"
+kubectl apply -f custom.yml
