@@ -1,6 +1,8 @@
 # https://github.com/aevea/action-kaniko
 name: Kaniko build
-on: push
+on: 
+  push:
+  workflow_dispatch:
 jobs:
   akg:
     runs-on: ubuntu-latest
